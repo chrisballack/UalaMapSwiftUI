@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DDD204FF2CD7E22E00D5D793 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDD204FD2CD7E22E00D5D793 /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		DDE9CA712CD5684400598964 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,13 +28,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DDD204FE2CD7E22E00D5D793 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DDD205002CD7E23300D5D793 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DDE9CA602CD5684200598964 /* UalaMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UalaMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE9CA702CD5684400598964 /* UalaMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UalaMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDE9CA7A2CD5684400598964 /* UalaMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UalaMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DDE9CA622CD5684200598964 /* UalaMap */ = {
+		DDD204D92CD7D01000D5D793 /* UalaMap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = UalaMap;
 			sourceTree = "<group>";
@@ -75,7 +81,8 @@
 		DDE9CA572CD5684200598964 = {
 			isa = PBXGroup;
 			children = (
-				DDE9CA622CD5684200598964 /* UalaMap */,
+				DDD204FD2CD7E22E00D5D793 /* Localizable.strings */,
+				DDD204D92CD7D01000D5D793 /* UalaMap */,
 				DDE9CA732CD5684400598964 /* UalaMapTests */,
 				DDE9CA7D2CD5684400598964 /* UalaMapUITests */,
 				DDE9CA612CD5684200598964 /* Products */,
@@ -108,7 +115,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DDE9CA622CD5684200598964 /* UalaMap */,
+				DDD204D92CD7D01000D5D793 /* UalaMap */,
 			);
 			name = UalaMap;
 			packageProductDependencies = (
@@ -192,6 +199,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"es-419",
 			);
 			mainGroup = DDE9CA572CD5684200598964;
 			minimizedProjectReferenceProxies = 1;
@@ -212,6 +220,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDD204FF2CD7E22E00D5D793 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +276,18 @@
 			targetProxy = DDE9CA7B2CD5684400598964 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DDD204FD2CD7E22E00D5D793 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DDD204FE2CD7E22E00D5D793 /* en */,
+				DDD205002CD7E23300D5D793 /* es-419 */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		DDE9CA822CD5684400598964 /* Debug */ = {
@@ -328,6 +349,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -384,6 +406,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -410,6 +433,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.MCSoftware.UalaMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -438,6 +465,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.MCSoftware.UalaMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
