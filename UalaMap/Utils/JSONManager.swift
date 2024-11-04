@@ -13,6 +13,13 @@ protocol JSONManagers {
 }
 
 class JSONManager: JSONManagers {
+    
+    let sqlManager: SQLManager
+    
+        init(sqlManager: SQLManager) {
+            self.sqlManager = sqlManager
+        }
+    
     func loadJSON(completion: @escaping (Result<[Location], Error>) -> Void) {
         
         guard let url = Bundle.main.url(forResource: "Cities", withExtension: "json") else {
@@ -25,7 +32,12 @@ class JSONManager: JSONManagers {
             
             do {
                 let data = try Data(contentsOf: url)
-                let locations = try JSONDecoder().decode([Location].self, from: data)
+                var locations = try JSONDecoder().decode([Location].self, from: data)
+                
+                for index in locations.indices {
+                                 let isFavorite = self.sqlManager.favoriteExists(by: locations[index].id)
+                                 locations[index].Favorite = isFavorite // Update Favorite property
+                             }
                 
                 DispatchQueue.main.async {
                     completion(.success(locations))

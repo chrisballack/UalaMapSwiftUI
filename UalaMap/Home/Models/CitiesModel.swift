@@ -32,6 +32,13 @@ struct Location: Codable,Hashable {
         self.id = try container.decode(Int.self, forKey: .id)
         self.coord = try container.decode(Coordinate.self, forKey: .coord)
         self.Favorite = false
-        
+    }
+    
+    init(country: String, name: String, id: Int, coord: Coordinate, favorite: Bool)  {
+        self.country = country
+        self.name = name
+        self.id = id
+        self.coord = coord
+        self.Favorite = favorite
     }
 }

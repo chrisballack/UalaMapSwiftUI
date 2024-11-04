@@ -7,3 +7,4 @@
 */
 "titleSearch"="Buscar ciudad";
 "titleSearchFav"="Buscar favoritos";
+"loadingCities"="Buscando ciudades...";
