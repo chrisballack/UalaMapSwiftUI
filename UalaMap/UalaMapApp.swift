@@ -2,7 +2,7 @@
 //  UalaMapApp.swift
 //  UalaMap
 //
-//  Created by Maria Fernanda Paz Rodriguez on 1/11/24.
+//  Created by Christians Bonilla on 1/11/24.
 //
 
 import SwiftUI

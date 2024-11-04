@@ -2,20 +2,30 @@
 //  ContentView.swift
 //  UalaMap
 //
-//  Created by Maria Fernanda Paz Rodriguez on 1/11/24.
+//  Created by Christians Bonilla on 1/11/24.
 //
+
 import SwiftUI
 
 protocol DataLoader {
     func loadCities()
+    func favButtonTapped(_ location: Location)
 }
 
 struct ListView: View,DataLoader {
+    func favButtonTapped(_ location: Location) {
+        if let index = cities.firstIndex(where: { $0.id == location.id }) {
+            cities[index].Favorite.toggle()
+            
+           }
+        
+    }
+    
     
     @State private var searchText: String = ""
     @State private var filterActive: Bool = false
     @State private var cities: [Location] = []
-    @State private var isLoading: Bool = true
+    @State private var isLoading: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -32,17 +42,11 @@ struct ListView: View,DataLoader {
                                 Text("No cities found")
                             } else {
                                 ForEach(cities, id: \.self) { item in
-                                    HStack {
-                                        Image(item.country.lowercased())
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .tint(Color("SecundaryColor"))
-                                        VStack{
-                                            Text(item.name)
-                                            Text(item.name)
-                                        }
+                                    CityRow(item: item, buttonAction: {
                                         
-                                    }
+                                        favButtonTapped(item)
+                                        
+                                    })
                                 }
                             }
                         }
@@ -51,10 +55,13 @@ struct ListView: View,DataLoader {
                 Spacer()
             }
             .onAppear {
-                if (cities.count == 0){ loadCities() }
+               if (cities.count == 0){ loadCities() }
             }
         }
     }
+    
+    
+    
     
     internal func loadCities() {
         let jsonManager = JSONManager()
@@ -64,9 +71,10 @@ struct ListView: View,DataLoader {
                 DispatchQueue.main.async {
                     self.cities = loadedCities
                     self.isLoading = false
-                    print(" \(self.removeDuplicateCountries(from: loadedCities))")
+                    
                 }
             case .failure(let error):
+                print("Error on JSON", error)
                 DispatchQueue.main.async {
                     self.isLoading = false
                 }
@@ -74,22 +82,11 @@ struct ListView: View,DataLoader {
         }
     }
     
-    private func removeDuplicateCountries(from cities: [Location]) -> [Location] {
-        var uniqueCities = [Location]()
-        var seenCountries = Set<String>()
-
-        for city in cities {
-            if !seenCountries.contains(city.country) {
-                seenCountries.insert(city.country)
-                uniqueCities.append(city)
-            }
-        }
-        
-        return uniqueCities
-    }
-
 }
 
 #Preview {
     ListView()
 }
+
+
+

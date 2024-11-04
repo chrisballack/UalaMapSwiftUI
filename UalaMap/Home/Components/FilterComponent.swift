@@ -28,6 +28,7 @@ struct FilterComponent: View {
                     .background(Color.white)
                     .cornerRadius(10)
                     .accessibilityIdentifier("titleSearchTextField")
+                    .foregroundStyle(Color("TextPrimaryColor"))
 
                 Image(systemName: "magnifyingglass")
                     .frame(width: 30, height: 30)
@@ -52,9 +53,9 @@ struct FilterComponent: View {
                     .opacity(byFavorites ? 1 : 0.5)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color("SecundaryColor"), lineWidth: 2)
+                            .stroke(byFavorites ? Color("AccentColor") : Color("SecundaryColor"), lineWidth: 2)
                     )
-                    .tint(Color("SecundaryColor"))
+                    .tint(byFavorites ? Color("AccentColor") : Color("SecundaryColor"))
                 
             }
             .accessibilityValue(byFavorites ? "heart.fill" : "heart")

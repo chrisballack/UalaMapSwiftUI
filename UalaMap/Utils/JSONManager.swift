@@ -2,7 +2,7 @@
 //  JSONManager.swift
 //  UalaMap
 //
-//  Created by Maria Fernanda Paz Rodriguez on 3/11/24.
+//  Created by Christians Bonilla on 3/11/24.
 //
 
 import Foundation
