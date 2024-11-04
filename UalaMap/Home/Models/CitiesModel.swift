@@ -12,16 +12,16 @@ struct Coordinate: Codable,Hashable {
     let lat: Double
 }
 
-struct Location: Codable,Hashable {
+struct Location: Codable,Hashable,Identifiable {
     let country: String
     let name: String
-    let id: Int  // Renamed from "_id" to "id" to follow Swift naming conventions
+    let id: Int
     let coord: Coordinate
     var Favorite: Bool
     
     enum CodingKeys: String, CodingKey {
         case country, name
-        case id = "_id"  // Map the JSON key "_id" to the Swift property "id"
+        case id = "_id"
         case coord
     }
     

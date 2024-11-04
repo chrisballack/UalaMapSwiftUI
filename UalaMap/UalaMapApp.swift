@@ -11,7 +11,9 @@ import SwiftUI
 struct UalaMapApp: App {
     var body: some Scene {
         WindowGroup {
-            ListView()
+            NavigationStack {
+                ListView()
+            }
         }
     }
 }

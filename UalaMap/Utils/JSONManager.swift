@@ -40,7 +40,7 @@ class JSONManager: JSONManagers {
                              }
                 
                 DispatchQueue.main.async {
-                    completion(.success(locations))
+                    completion(.success(locations.sorted(by: { $0.name < $1.name})))
                 }
             } catch {
                 DispatchQueue.main.async {

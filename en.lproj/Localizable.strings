@@ -8,3 +8,5 @@
 "titleSearch"="Search for a city";
 "titleSearchFav"="Search for favorites";
 "loadingCities"="Loading cities...";
+"noFavorites"="No favorites found";
+"noCities"="No cities found";

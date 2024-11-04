@@ -11,10 +11,13 @@ struct FilterComponent: View {
     
     @Binding var textInput: String
     @Binding var byFavorites: Bool
+    @Binding var isLoading: Bool
     
-    init(textInput: Binding<String>, byFavorites: Binding<Bool>) {
+    init(textInput: Binding<String>, byFavorites: Binding<Bool>, isLoading: Binding<Bool>) {
         self._textInput = textInput
         self._byFavorites = byFavorites
+        self._isLoading = isLoading
+        
     }
     
     var body: some View {
@@ -41,25 +44,30 @@ struct FilterComponent: View {
             )
             .padding(.horizontal, 4)
 
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    byFavorites.toggle()
-                    textInput = ""
+            if (!isLoading){
+                
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        byFavorites.toggle()
+                        textInput = ""
+                    }
+                }) {
+                    Image(systemName: byFavorites ? "heart.fill" : "heart")
+                        .frame(width: 30, height: 30)
+                        .rotationEffect(.degrees(byFavorites ? 360 : 0))
+                        .opacity(byFavorites ? 1 : 0.5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(byFavorites ? Color("AccentColor") : Color("SecundaryColor"), lineWidth: 2)
+                        )
+                        .tint(byFavorites ? Color("AccentColor") : Color("SecundaryColor"))
+                    
                 }
-            }) {
-                Image(systemName: byFavorites ? "heart.fill" : "heart")
-                    .frame(width: 30, height: 30)
-                    .rotationEffect(.degrees(byFavorites ? 360 : 0))
-                    .opacity(byFavorites ? 1 : 0.5)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(byFavorites ? Color("AccentColor") : Color("SecundaryColor"), lineWidth: 2)
-                    )
-                    .tint(byFavorites ? Color("AccentColor") : Color("SecundaryColor"))
+                .accessibilityValue(byFavorites ? "heart.fill" : "heart")
+                .accessibilityIdentifier("favoritesButton")
                 
             }
-            .accessibilityValue(byFavorites ? "heart.fill" : "heart")
-            .accessibilityIdentifier("favoritesButton")
+           
 
 
             Spacer(minLength: 16)
@@ -69,5 +77,5 @@ struct FilterComponent: View {
 }
 
 #Preview {
-    FilterComponent(textInput: .constant(""), byFavorites: .constant(false))
+    FilterComponent(textInput: .constant(""), byFavorites: .constant(false), isLoading: .constant(false))
 }
