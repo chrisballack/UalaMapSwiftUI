@@ -23,7 +23,7 @@ struct FilterComponent: View {
     var body: some View {
         HStack {
             Spacer(minLength: 16)
-
+            
             HStack {
                 TextField(byFavorites ? String(localized: "titleSearchFav") : String(localized: "titleSearch"), text: $textInput)
                     .padding(.leading)
@@ -32,7 +32,7 @@ struct FilterComponent: View {
                     .cornerRadius(10)
                     .accessibilityIdentifier("titleSearchTextField")
                     .foregroundStyle(Color("TextPrimaryColor"))
-
+                
                 Image(systemName: "magnifyingglass")
                     .frame(width: 30, height: 30)
                     .tint(Color("SecundaryColor"))
@@ -43,7 +43,7 @@ struct FilterComponent: View {
                     .stroke(Color("SecundaryColor"), lineWidth: 2)
             )
             .padding(.horizontal, 4)
-
+            
             if (!isLoading){
                 
                 Button(action: {
@@ -67,13 +67,10 @@ struct FilterComponent: View {
                 .accessibilityIdentifier("favoritesButton")
                 
             }
-           
-
-
             Spacer(minLength: 16)
-        }
+        } .padding(.top, 16)
     }
-
+    
 }
 
 #Preview {

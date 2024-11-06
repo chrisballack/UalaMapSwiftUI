@@ -9,30 +9,72 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
-    let location: Location
+    
+    @Binding var location: Location?
     @State private var position: MapCameraPosition
     
-    init(location: Location) {
-        self.location = location
+    init(location: Binding<Location?>) {
+        self._location = location
         
-        self._position = State(initialValue: MapCameraPosition.region(MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: location.coord.lat, longitude: location.coord.lon),
-            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-        )))
-        print("self.location",self.location)
+        let initialLocation = location.wrappedValue
+        if let location = initialLocation {
+            self._position = State(initialValue: MapCameraPosition.region(
+                MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: location.coord.lat, longitude: location.coord.lon),
+                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                )
+            ))
+        } else {
+            self._position = State(initialValue: MapCameraPosition.region(
+                MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: 8.0, longitude: -72.0),
+                    span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+                )
+            ))
+        }
     }
     
     var body: some View {
-        Map(position: $position) {
-            Marker("", coordinate: CLLocationCoordinate2D(
-                latitude: location.coord.lat,
-                longitude: location.coord.lon))
+        
+        let region = location.flatMap {
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: $0.coord.lat, longitude: $0.coord.lon),
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            )
         }
-        .navigationTitle("\(location.name), \(location.country)")
-        .edgesIgnoringSafeArea(.all)
+        
+        if let region = region {
+            DispatchQueue.main.async {
+                withAnimation(.easeInOut(duration: 3.0)) {
+                    
+                    self.position = .region(region)
+                    
+                }
+            }
+        }
+        
+        return Group {
+            if let location = location {
+                Map(position: $position) {
+                    Marker("", coordinate: CLLocationCoordinate2D(
+                        latitude: location.coord.lat,
+                        longitude: location.coord.lon))
+                }
+                .navigationTitle("\(location.name), \(location.country)")
+                .navigationBarTitleDisplayMode(.inline)
+                .edgesIgnoringSafeArea(.all)
+            } else {
+                HStack{
+                    Spacer()
+                    Text("No location available")
+                    Spacer()
+                }
+                
+            }
+        }
     }
 }
 
 #Preview {
-    MapView(location: Location(country: "hola", name: "mundo", id: 1, coord: Coordinate(lon: -72, lat: 2.2), favorite: false))
+    MapView(location: .constant(Location(country: "hola", name: "mundo", id: 1, coord: Coordinate(lon: -72, lat: 2.2), favorite: false)))
 }

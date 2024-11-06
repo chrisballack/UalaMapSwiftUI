@@ -13,23 +13,23 @@ protocol DataLoader {
 }
 
 struct ListView: View, DataLoader {
-
+    
     @State private var searchText: String = ""
     @State private var filterActive: Bool = false
     @State private var cities: [Location] = []
     @State private var favCities: [Location] = []
     @State private var isLoading: Bool = false
-    let SQLManagers = SQLManager()
     @State private var filteredCities: [Location] = []
     @State private var isNavigating = false
-    @State private var selectecItem: Location?
-
+    @State private var selectedItem: Location?
+    
+    @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
+    let _SQLManager = SQLManager()
     
     private var cityListView: some View {
-        @ViewBuilder
-        var content: some View {
-            let citiesToDisplay = filteredCities
-            
+        let citiesToDisplay = filteredCities
+        
+        return Group {
             if citiesToDisplay.isEmpty {
                 Text(filterActive ? String(localized: "noFavorites") : String(localized: "noCities"))
             } else {
@@ -37,67 +37,81 @@ struct ListView: View, DataLoader {
                     CityRow(item: item, buttonAction: {
                         favButtonTapped(item)
                     }).onTapGesture {
-                        selectecItem = item
-                        isNavigating = true
+                        selectedItem = item
+                        if !isLandscape {
+                            isNavigating = true
+                        }
                     }
                 }
             }
         }
-        
-        return content
     }
-
+    
     var body: some View {
-            VStack {
-                FilterComponent(textInput: $searchText, byFavorites: $filterActive, isLoading: $isLoading)
+        VStack {
+            if isLandscape {
+                HStack {
+                    VStack {
+                        if isLoading {
+                            ProgressView(String(localized: "loadingCities"))
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        } else {
+                            ListWithFilter()
+                        }
+                        Spacer()
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
+                    
+                    if !isLoading {
+                        MapView(location: $selectedItem).navigationBarHidden(true)
+                    }
+                }
+            } else {
+                
                 if isLoading {
                     ProgressView(String(localized: "loadingCities"))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
-                    ScrollView {
-                        Spacer(minLength: 16)
-                        LazyVStack {
-                            cityListView
-                        }
-                    }
+                    ListWithFilter()
                 }
                 Spacer()
             }
-            .onAppear {
-               
-                if cities.isEmpty { loadCities() }
-                if favCities.isEmpty {
-                    favCities = SQLManagers.fetchAllFavorites()
-                }
-            } .onChange(of: searchText) { _,_ in
-                filterCitiesAsync()
+        }
+        .onAppear {
+            loadInitialData()
+            NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: .main) { _ in
+                self.isLandscape = UIDevice.current.orientation.isLandscape
             }
-            .onChange(of: filterActive) { _,_ in
-                filterCitiesAsync()
-            }  .navigationDestination(isPresented: $isNavigating) {
-                if let item = selectecItem {
-                    MapView(location: item)
-                }
-            }
+        }
+        .onDisappear {
+            NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+        }
+        .onChange(of: searchText) { _,_ in filterCitiesAsync() }
+        .onChange(of: filterActive) { _,_ in filterCitiesAsync() }
+        .navigationDestination(isPresented: $isNavigating) {
+            MapView(location: $selectedItem)
+        }
+    }
+    
+    private func loadInitialData() {
+        if cities.isEmpty { loadCities() }
+        if favCities.isEmpty {
+            favCities = _SQLManager.fetchAllFavorites()
+        }
     }
     
     private func filterCitiesAsync() {
         let citiesToFilter = filterActive ? favCities : cities
-       // isLoading = true
-
         DispatchQueue.global(qos: .userInitiated).async {
             let result = citiesToFilter.filter { city in
                 searchText.isEmpty || city.name.localizedCaseInsensitiveContains(searchText)
             }
-            
-            print("result",result.count)
-
             DispatchQueue.main.async {
                 self.filteredCities = result
                 self.isLoading = false
             }
         }
     }
-
     
     internal func favButtonTapped(_ location: Location) {
         if let index = cities.firstIndex(where: { $0.id == location.id }) {
@@ -106,24 +120,41 @@ struct ListView: View, DataLoader {
             if cities[index].Favorite {
                 favCities.append(cities[index])
             } else {
-                if let favIndex = favCities.firstIndex(where: { $0.id == location.id }) {
-                    favCities.remove(at: favIndex)
-                }
+                favCities.removeAll { $0.id == location.id }
             }
             
             DispatchQueue.global(qos: .background).async {
                 if cities[index].Favorite {
-                    SQLManagers.insertFavorites(location: cities[index])
+                    _SQLManager.insertFavorites(location: cities[index])
                 } else {
-                    SQLManagers.deleteFavorite(by: cities[index].id)
+                    _SQLManager.deleteFavorite(by: cities[index].id)
+                }
+            }
+            filterCitiesAsync()
+        }
+    }
+    
+    @ViewBuilder
+    private func ListWithFilter() -> some View {
+        VStack {
+            if isLoading {
+                ProgressView(String(localized: "loadingCities"))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                FilterComponent(textInput: $searchText, byFavorites: $filterActive, isLoading: $isLoading)
+                ScrollView {
+                    Spacer(minLength: 16)
+                    LazyVStack {
+                        cityListView
+                    }
                 }
             }
         }
     }
-
+    
     internal func loadCities() {
         isLoading = true
-        let jsonManager = JSONManager(sqlManager: SQLManagers)
+        let jsonManager = JSONManager(sqlManager: _SQLManager)
         jsonManager.loadJSON { result in
             DispatchQueue.main.async {
                 switch result {
@@ -131,7 +162,7 @@ struct ListView: View, DataLoader {
                     self.cities = loadedCities
                     self.filterCitiesAsync()
                 case .failure(let error):
-                    print("Error on JSON", error)
+                    print("Error loading cities:", error)
                     self.isLoading = false
                 }
             }
@@ -142,7 +173,3 @@ struct ListView: View, DataLoader {
 #Preview {
     ListView()
 }
-
-
-
-
