@@ -12,7 +12,7 @@ struct UalaMapApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                ListView()
+                HomeScreen().background(Color("PrimaryColor"))
             }
         }
     }

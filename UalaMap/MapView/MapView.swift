@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+/// Scren to show a map and shpw the cities location
 struct MapView: View {
     
     @Binding var location: Location?
@@ -34,6 +35,7 @@ struct MapView: View {
         }
     }
     
+    /// Determinate the region where the map will move and some optional chaining to avoid errors
     var body: some View {
         
         let region = location.flatMap {
@@ -66,7 +68,7 @@ struct MapView: View {
             } else {
                 HStack{
                     Spacer()
-                    Text("No location available")
+                    Text(String(localized: "NoCitiesMap"))
                     Spacer()
                 }
                 

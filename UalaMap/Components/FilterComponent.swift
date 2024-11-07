@@ -2,11 +2,12 @@
 //  TwoOptionsButtons.swift
 //  GameSteamSwiftUI
 //
-//  Created by Dev IOS on 11/12/23.
+//  Created by Christians bonilla on 6/11/24.
 //
 
 import SwiftUI
 
+/// Component to show a top filter with a button to change the list
 struct FilterComponent: View {
     
     @Binding var textInput: String
@@ -28,20 +29,23 @@ struct FilterComponent: View {
                 TextField(byFavorites ? String(localized: "titleSearchFav") : String(localized: "titleSearch"), text: $textInput)
                     .padding(.leading)
                     .frame(height: 30)
-                    .background(Color.white)
                     .cornerRadius(10)
                     .accessibilityIdentifier("titleSearchTextField")
-                    .foregroundStyle(Color("TextPrimaryColor"))
+                    .foregroundStyle(Color("Black"))
+                Button {
+                    textInput = ""
+                } label: {
+                    Image(systemName: textInput.isEmpty ? "magnifyingglass" : "xmark.circle")
+                        .frame(width: 30, height: 30)
+                        .foregroundStyle(Color("Black"))
+                }
+
                 
-                Image(systemName: "magnifyingglass")
-                    .frame(width: 30, height: 30)
-                    .tint(Color("SecundaryColor"))
             }
             .padding(2)
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color("SecundaryColor"), lineWidth: 2)
-            )
+            .background( RoundedRectangle(cornerRadius: 15)
+                .stroke(Color("SecundaryColor"), lineWidth: 2)
+                .background(RoundedRectangle(cornerRadius: 15).fill(Color.white)))
             .padding(.horizontal, 4)
             
             if (!isLoading){

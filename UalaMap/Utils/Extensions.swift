@@ -7,28 +7,27 @@
 
 import UIKit
 
-
 extension UIColor {
+    /// Method to determinate if a color so much dark or not
+    /// - Returns: returns true if very obscure and false if not true
     func isDark() -> Bool {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
         
-        // Get the color components
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        
-        // Calculate luminance
         let luminance = 0.299 * red + 0.587 * green + 0.114 * blue
         
-        // Return true if the color is dark
-        return luminance < 0.5 // 0.5 corresponds to 128 in the 0-255 scale
+        return luminance < 0.5
     }
 }
 
 
 extension UIImage {
     
+    /// Method to get the average color from a image
+    /// - Returns: Return the a color determinated for all the colors in the image
     func averageColor() -> UIColor? {
         guard let inputImage = CIImage(image: self) else { return nil }
         

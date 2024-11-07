@@ -7,11 +7,13 @@
 
 import Foundation
 
+/// Model of cordinates inside of location
 struct Coordinate: Codable,Hashable {
     let lon: Double
     let lat: Double
 }
 
+/// Model of the list of cities
 struct Location: Codable,Hashable,Identifiable {
     let country: String
     let name: String
@@ -34,6 +36,13 @@ struct Location: Codable,Hashable,Identifiable {
         self.Favorite = false
     }
     
+    /// Using only per testing
+    /// - Parameters:
+    ///   - country: country name short
+    ///   - name: City name
+    ///   - id: unique is
+    ///   - coord: lon,lat of the city
+    ///   - favorite: determinate if ready on favorites
     init(country: String, name: String, id: Int, coord: Coordinate, favorite: Bool)  {
         self.country = country
         self.name = name

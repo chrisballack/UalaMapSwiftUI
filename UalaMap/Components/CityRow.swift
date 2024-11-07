@@ -6,22 +6,28 @@
 //
 import SwiftUI
 
+/// The Component used to show every city in the list
 struct CityRow: View {
     let item: Location
+    let buttonFavorites: () -> Void
+    let buttonInfo: () -> Void
     
-    let buttonAction: () -> Void
-    
-    init(item: Location, buttonAction: @escaping () -> Void) {
+    init(item: Location, buttonFavorites: @escaping () -> Void, buttonInfo: @escaping () -> Void) {
         self.item = item
-        self.buttonAction = buttonAction
+        self.buttonFavorites = buttonFavorites
+        self.buttonInfo = buttonInfo
     }
     
+    /// Detemitate if the color dark or not
+    /// - Parameter country: country code un lowercase to select the image
+    /// - Returns: return true or false depending is de color dark or not
     func isDark(country: String) -> Bool{
         
         return (UIImage(named: country.lowercased())?.averageColor() ?? UIColor.clear).isDark()
         
     }
-
+    
+    /// include the contry flat, city name, location a button to see the information and other to select it if your favorite or not
     var body: some View {
         VStack {
             HStack {
@@ -43,11 +49,26 @@ struct CityRow: View {
                         .foregroundColor(isDark(country: item.country) ? Color.white : Color("TextSecundaryColor"))
                     
                 }
-
                 Spacer(minLength: 16)
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        buttonAction()
+                        buttonInfo()
+                    }
+                   
+                }) {
+                    Image(systemName: "info")
+                        .frame(width: 30, height: 30)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(isDark(country: item.country) ? Color.white : Color("SecundaryColor"), lineWidth: 2)
+                        )
+                        .foregroundColor(isDark(country: item.country) ? Color.white : Color("SecundaryColor"))
+                    
+                }
+                
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        buttonFavorites()
                     }
                    
                 }) {
@@ -58,7 +79,7 @@ struct CityRow: View {
                                 .stroke(item.Favorite ? Color("AccentColor") : isDark(country: item.country) ? Color.white : Color("SecundaryColor"), lineWidth: 2)
                         )
                         .foregroundColor(item.Favorite ? Color("AccentColor") : isDark(country: item.country) ? Color.white : Color("SecundaryColor"))
-                        .padding(.trailing, 16)
+                        .padding(.trailing, 8)
                     
                 }
                
