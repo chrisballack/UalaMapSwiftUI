@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  UalaMap
+
+  Created by Christians Bonilla on 3/11/24.
+  
+*/
+"titleSearch"="Buscar ciudad";
+"titleSearchFav"="Buscar favoritos";
+"loadingCities"="Buscando ciudades...";
+"noFavorites"="No se encontraron favoritos";
+"noCities"="No se encontraron ciudades";
+"NoCitiesMap"="Seleccióna una ciudad";
+"Close"="Cerrar";
