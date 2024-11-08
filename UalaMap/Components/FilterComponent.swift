@@ -38,7 +38,7 @@ struct FilterComponent: View {
                     Image(systemName: textInput.isEmpty ? "magnifyingglass" : "xmark.circle")
                         .frame(width: 30, height: 30)
                         .foregroundStyle(Color("Black"))
-                }
+                }.accessibilityIdentifier("clearTextButton")
 
                 
             }

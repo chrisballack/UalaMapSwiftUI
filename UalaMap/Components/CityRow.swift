@@ -38,15 +38,19 @@ struct CityRow: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .padding(.leading, 16)
                     .padding(.trailing, 8)
+                    .accessibilityIdentifier("CountryImage")
 
                 VStack(alignment: .leading) {
                     Text("\(item.name), \(item.country)")
                         .font(.system(size: 18, weight: .heavy))
                         .foregroundColor(isDark(country: item.country) ? Color.white : Color.black)
+                        .accessibilityIdentifier("CityName")
+
                     
                     Text("\(item.coord.lon), \(item.coord.lat)")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(isDark(country: item.country) ? Color.white : Color("TextSecundaryColor"))
+                        .accessibilityIdentifier("Coordinates")
                     
                 }
                 Spacer(minLength: 16)
@@ -65,6 +69,7 @@ struct CityRow: View {
                         .foregroundColor(isDark(country: item.country) ? Color.white : Color("SecundaryColor"))
                     
                 }
+                .accessibilityIdentifier("InfoButton")
                 
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -82,6 +87,7 @@ struct CityRow: View {
                         .padding(.trailing, 8)
                     
                 }
+                .accessibilityIdentifier("FavoriteButton")
                
                 
             }

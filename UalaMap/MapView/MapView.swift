@@ -59,9 +59,11 @@ struct MapView: View {
             if let location = location {
                 Map(position: $position) {
                     Marker("", coordinate: CLLocationCoordinate2D(
-                        latitude: location.coord.lat,
-                        longitude: location.coord.lon))
+                                        latitude: location.coord.lat,
+                                        longitude: location.coord.lon))
+                    
                 }
+                .accessibilityIdentifier("MapViewMap")
                 .navigationTitle("\(location.name), \(location.country)")
                 .navigationBarTitleDisplayMode(.inline)
                 .edgesIgnoringSafeArea(.all)
@@ -69,6 +71,7 @@ struct MapView: View {
                 HStack{
                     Spacer()
                     Text(String(localized: "NoCitiesMap"))
+                        .accessibilityIdentifier("NoCitiesMessage")
                     Spacer()
                 }
                 

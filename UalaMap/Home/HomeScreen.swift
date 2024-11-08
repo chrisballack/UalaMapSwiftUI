@@ -25,30 +25,25 @@ struct HomeScreen: View {
                         if model.isLoading {
                             ProgressView(String(localized: "loadingCities"))
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .accessibilityIdentifier("loadingCities")
                         } else {
-                            VStack {
-                                if model.isLoading {
-                                    ProgressView(String(localized: "loadingCities"))
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } else {
-                                    FilterComponent(textInput: $model.searchText, byFavorites: $model.filterActive, isLoading: $model.isLoading)
-                                    ScrollView {
-                                        Spacer(minLength: 16)
-                                        LazyVStack {
-                                            if model.filteredCities.isEmpty {
-                                                Text(model.filterActive ? String(localized: "noFavorites") : String(localized: "noCities"))
-                                            } else {
-                                                ForEach(model.filteredCities, id: \.self) { item in
-                                                    CityRow(item: item, buttonFavorites: {
-                                                        favButtonTapped(item)
-                                                    }, buttonInfo: {
-                                                        modalButton(item)
-                                                    }).onTapGesture {
-                                                        model.selectedItem = item
-                                                        if !isLandscape {
-                                                            isNavigating = true
-                                                        }
-                                                    }
+                            
+                            FilterComponent(textInput: $model.searchText, byFavorites: $model.filterActive, isLoading: $model.isLoading)
+                            ScrollView {
+                                Spacer(minLength: 16)
+                                LazyVStack {
+                                    if model.filteredCities.isEmpty {
+                                        Text(model.filterActive ? String(localized: "noFavorites") : String(localized: "noCities"))
+                                    } else {
+                                        ForEach(model.filteredCities, id: \.self) { item in
+                                            CityRow(item: item, buttonFavorites: {
+                                                favButtonTapped(item)
+                                            }, buttonInfo: {
+                                                modalButton(item)
+                                            }).onTapGesture {
+                                                model.selectedItem = item
+                                                if !isLandscape {
+                                                    isNavigating = true
                                                 }
                                             }
                                         }
