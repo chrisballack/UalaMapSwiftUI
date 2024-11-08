@@ -35,6 +35,9 @@ class CitiesViewModel: ObservableObject {
     /// The currently selected to show information in the modal
     @Published var infoItem: Location?
     
+    /// Dictionary to separate the elements of the list by characters
+    private var citiesDictionary: [Character: [Location]] = [:]
+    
     private let _SQLManager: SQLManager
     
     /// Initializes the `CitiesViewModel` with an optional `SQLManager` to handle favorite cities storage.
@@ -68,13 +71,23 @@ class CitiesViewModel: ObservableObject {
                 
                 // Sort the cities alphabetically by name
                 let sortedCities = updatedCities.sorted { $0.name < $1.name }
+                
+                // Separate the elemets by the fist letter of the cities
+                for city in sortedCities {
+                    let firstLetter = city.name.first ?? "?"
+                    if citiesDictionary[firstLetter] == nil {
+                        citiesDictionary[firstLetter] = []
+                    }
+                    citiesDictionary[firstLetter]?.append(city)
+                }
+                
                 DispatchQueue.main.async {
                     self.cities = sortedCities
                     Task {
                         await self.filterCities()
                     }
                 }
-               
+                
             } catch {
                 print("Error al decodificar las ciudades: \(error)")
                 DispatchQueue.main.async {
@@ -89,6 +102,7 @@ class CitiesViewModel: ObservableObject {
         }
     }
     
+    
     /// Fetches the list of favorite cities from the local database using the `_SQLManager`.
     func fetchFavCities() async {
         DispatchQueue.main.async {
@@ -96,12 +110,36 @@ class CitiesViewModel: ObservableObject {
         }
     }
     
+    /// Get the cities by letter  and validate if nor exist return a empty array
+    func getCities(startingWith letter: Character) -> [Location] {
+          return citiesDictionary[letter] ?? []
+      }
+    
     /// Filters the cities based on the `searchText` and whether the `filterActive` flag is set.
     func filterCities() async {
-        let citiesToFilter = filterActive ? favCities : cities
+        let citiesToFilter:[Location]
         
+        if (!filterActive){
+            
+            if(searchText.isEmpty){
+                
+                citiesToFilter = cities
+                
+            }else{
+                // Get the first letter of the searchText to get the elements inside the dictionary
+                citiesToFilter = getCities(startingWith: searchText.first ?? " ")
+                
+            }
+            
+        }else{
+            
+            citiesToFilter = favCities
+            
+        }
+        
+        // filtered the elemets in the list using hasPrefix
         let filtered = citiesToFilter.filter { city in
-            searchText.isEmpty || city.name.localizedCaseInsensitiveContains(searchText)
+            searchText.isEmpty || city.name.lowercased().hasPrefix(searchText.lowercased())
         }
         DispatchQueue.main.async {
             self.filteredCities = filtered
